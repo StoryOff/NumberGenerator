@@ -51,11 +51,12 @@ namespace NumberGenerator.ViewModels
             }
         }
 
-        private NumberVariants FindNumberVariants(string phoneNumber)
+        private NumberVariants FindNumberVariants((string phoneNumber, string separator) tuple)
         {
             foreach (var numberVariants in Numbers)
             {
-                if (numberVariants.Number == phoneNumber)
+                if (numberVariants.PhoneNumberInfo.Number == tuple.phoneNumber &&
+                    numberVariants.PhoneNumberInfo.Separator == tuple.separator)
                 {
                     return numberVariants;
                 }
@@ -76,12 +77,12 @@ namespace NumberGenerator.ViewModels
                 return;
             }
 
-            NumberVariants currentNumberVariants = FindNumberVariants(Settings.Instance.PhoneNumber);
+            NumberVariants currentNumberVariants = FindNumberVariants((Settings.Instance.PhoneNumber, Settings.Instance.Separator));
 
             if (currentNumberVariants == null)
             {
                 currentNumberVariants = new NumberVariants();
-                currentNumberVariants.Number = Settings.Instance.PhoneNumber;
+                currentNumberVariants.PhoneNumberInfo = new(Settings.Instance.PhoneNumber, Settings.Instance.Separator);
                 currentNumberVariants.GeneratedNumberVariants = await _numberGenerator.GenerateNumbers(Settings.Instance.PhoneNumber, Settings.Instance.Separator);
                 Numbers.Add(currentNumberVariants);
             }

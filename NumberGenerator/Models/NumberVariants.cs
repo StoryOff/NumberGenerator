@@ -1,4 +1,5 @@
-﻿using NumberGenerator.Common;
+﻿using Newtonsoft.Json;
+using NumberGenerator.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,15 +12,19 @@ namespace NumberGenerator.Models
     class NumberVariants : ViewModelBase
     {
         private string _number = "";
-        public string Number
+        private string _separator = "";
+        public (string Number, string Separator) PhoneNumberInfo
         {
-            get => _number;
+            get => (_number, _separator);
             set
             {
-                if (_number != value)
-                    SetProperty(ref _number, value);
+                if (_number != value.Number)
+                    SetProperty(ref _number, value.Number);
+                if (_separator != value.Separator)
+                    SetProperty(ref _separator, value.Separator);
             }
         }
+
         private ObservableCollection<string> _generatedNumberVariants = new ObservableCollection<string>();
         public ObservableCollection<string> GeneratedNumberVariants
         {
